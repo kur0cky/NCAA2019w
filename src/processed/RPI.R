@@ -1,7 +1,7 @@
 # RPI feature from regular season
 
 library(tidyverse)
-reg_stats_compact <- read.csv("data/datafiles/RegularSeasonCompactResults.csv",
+reg_stats_compact <- read.csv("data/Wdatafiles/WRegularSeasonCompactResults.csv",
                       stringsAsFactors = FALSE) %>% 
   as_tibble()
 

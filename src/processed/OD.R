@@ -16,13 +16,14 @@ tmp <- reg_stats_compact %>%
                       spread(TeamID, Score, fill = 0) %>% 
                       as.data.frame() %>% 
                       column_to_rownames(var = "OTeamID") %>% 
-                      as.matrix()),
+                      as.matrix() %>% 
+                      + 0.00001),
          rate = map(data, ~ tibble(TeamID = colnames(.x))))
 
 for(j in 1:nrow(tmp)){
   o <-list()
   o[[1]] <- rep(1, ncol(tmp$data[[j]]))
-  for(i in 1:100){
+  for(i in 1:10000){
     o[[i+1]] <- t(tmp$data[[j]]) %*% (1/(tmp$data[[j]] %*% (1/o[[i]])))
     if( sum((o[[i+1]] - o[[i]])^2) < 1e-16 ) break()
   }

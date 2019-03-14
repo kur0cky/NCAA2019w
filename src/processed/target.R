@@ -1,5 +1,5 @@
 library(tidyverse)
-tourney_stats_compact <- read_csv("data/DataFiles/NCAATourneyCompactResults.csv")
+tourney_stats_compact <- read_csv("data/WDataFiles/WNCAATourneyCompactResults.csv")
 
 target <- tourney_stats_compact %>% 
   mutate(team1 = if_else(WTeamID < LTeamID, WTeamID, LTeamID),

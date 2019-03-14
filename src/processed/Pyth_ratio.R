@@ -1,10 +1,10 @@
 # Pythagorean expectation
 
 library(tidyverse)
-reg_stats <- read.csv("data/datafiles/RegularSeasonDetailedResults.csv",
+reg_stats <- read.csv("data/Wdatafiles/WRegularSeasonDetailedResults.csv",
                       stringsAsFactors = FALSE) %>% 
   as_tibble()
-reg_stats_compact <- read.csv("data/datafiles/RegularSeasonCompactResults.csv",
+reg_stats_compact <- read.csv("data/Wdatafiles/WRegularSeasonCompactResults.csv",
                           stringsAsFactors = FALSE) %>% 
   as_tibble()
 

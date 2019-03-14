@@ -2,7 +2,7 @@
 
 library(tidyverse)
 
-reg_stats_compact <- read_csv("data/datafiles/RegularSeasonCompactResults.csv")
+reg_stats_compact <- read_csv("data/Wdatafiles/WRegularSeasonCompactResults.csv")
 
 
 tmp <- bind_rows(
