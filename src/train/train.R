@@ -10,10 +10,10 @@ library(xgboost)
 library(recipes)
 
 features <- read.csv("data/train/features.csv", stringsAsFactors = FALSE)
-sample <- read.csv("data/SampleSubmissionStage1.csv", 
+sample <- read.csv("data/WSampleSubmissionStage1.csv", 
                    stringsAsFactors = FALSE) %>% 
   as_tibble()
-seeds <- read_csv("data/datafiles/NCAATourneySeeds.csv")
+# seeds <- read_csv("data/datafiles/WNCAATourneySeeds.csv")
 source("src/function/validate.R")
 
 tr <- features %>% 

@@ -2,9 +2,9 @@
 library(tidyverse)
 library(elo)
 
-reg_stats_compact <- read_csv("data/DataFiles/RegularSeasonCompactResults.csv")
-tourney_stats_compact <- read_csv("data/datafiles/NCAATourneyCompactResults.csv")
-second_stats_compact <- read_csv("data/datafiles/SecondaryTourneyCompactResults.csv")
+reg_stats_compact <- read_csv("data/WDataFiles/WRegularSeasonCompactResults.csv")
+tourney_stats_compact <- read_csv("data/Wdatafiles/WNCAATourneyCompactResults.csv")
+# second_stats_compact <- read_csv("data/Wdatafiles/WSecondaryTourneyCompactResults.csv")
 
 tmp <- reg_stats_compact %>% 
   select(Season, DayNum, WTeamID, LTeamID) %>% 
@@ -24,7 +24,8 @@ tmp <- reg_stats_compact %>%
 
 tmp2 <- bind_rows(reg_stats_compact,
                   tourney_stats_compact,
-                  second_stats_compact) %>% 
+                  # second_stats_compact
+                  ) %>% 
   select(Season, DayNum, WTeamID, LTeamID) %>% 
   arrange(Season, DayNum, WTeamID, LTeamID) %>% 
   mutate(win_flg = TRUE,

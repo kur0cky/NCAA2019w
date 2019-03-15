@@ -4,13 +4,13 @@
 library(tidyverse)
 
 seed_fe <- read_csv("data/features/seed_fe.csv")
-ranking_fe <- read.csv("data/features/ranking_fe.csv", stringsAsFactors = FALSE)
-reg_season_fe <- read.csv("data/features/reg_season_fe.csv", stringsAsFactors = FALSE)
+# ranking_fe <- read.csv("data/features/ranking_fe.csv", stringsAsFactors = FALSE)
+# reg_season_fe <- read.csv("data/features/reg_season_fe.csv", stringsAsFactors = FALSE)
 RPI_fe <- read.csv("data/features/RPI_fe.csv", stringsAsFactors = FALSE)
 Pyth_ratio_fe <- read.csv("data/features/Pyth_ratio_fe.csv",stringsAsFactors = FALSE)
 ex_tourney_games_fe <- read.csv("data/features/ex_tourney_games_fe.csv",stringsAsFactors = FALSE)
 massey_fe <- read.csv("data/features/massey_fe.csv", stringsAsFactors = FALSE)
-massey_conf_fe <- read.csv("data/features/massey_conf_fe.csv", stringsAsFactors = FALSE)
+# massey_conf_fe <- read.csv("data/features/massey_conf_fe.csv", stringsAsFactors = FALSE)
 colley_fe <- read.csv("data/features/colley_fe.csv", stringsAsFactors = FALSE)
 elo_fe <- read.csv("data/features/elo_fe.csv", stringsAsFactors = FALSE)
 elo_score_fe <- read.csv("data/features/elo_score_fe.csv", stringsAsFactors = FALSE)
@@ -22,7 +22,7 @@ coef_nmf_fe <- read.csv("data/features/coef_nmf_fe.csv", stringsAsFactors = FALS
 basis_nmf_fe <- read.csv("data/features/basis_nmf_fe.csv", stringsAsFactors = FALSE)
 nmf_fe <- read.csv("data/features/nmf_fe.csv", stringsAsFactors = FALSE)
 target <- read_csv("data/processed/target.csv")
-sample <- read_csv("data/SampleSubmissionStage1.csv")
+sample <- read_csv("data/WSampleSubmissionStage1.csv")
 
 target %>% 
   bind_rows(anti_join(sample, target, by = "ID")) %>% 

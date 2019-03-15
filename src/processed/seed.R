@@ -1,6 +1,6 @@
 library(tidyverse)
 
-tourney_seeds <- read_csv("data/DataFiles/NCAATourneySeeds.csv")
+tourney_seeds <- read_csv("data/WDataFiles/WNCAATourneySeeds.csv")
 
 seed_tmp <- tourney_seeds %>% 
   transmute(Season, 

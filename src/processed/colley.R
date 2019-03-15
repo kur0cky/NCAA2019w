@@ -2,7 +2,7 @@
 
 library(tidyverse)
 
-reg_stats_compact <- read_csv("data/DataFiles/RegularSeasonCompactResults.csv")
+reg_stats_compact <- read_csv("data/WDataFiles/WRegularSeasonCompactResults.csv")
 
 b <- reg_stats_compact %>% 
   select(Season, WTeamID, LTeamID) %>% 

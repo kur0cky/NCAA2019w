@@ -4,7 +4,7 @@ library(tidyverse)
 
 reg_stats_compact <- read_csv("data/processed/reg_stats_compact.csv")
 target <- read_csv("data/processed/target.csv")
-sample <- read_csv("data/SampleSubmissionStage1.csv")
+sample <- read_csv("data/WSampleSubmissionStage1.csv")
 
 tmp <- reg_stats_compact %>%
   group_by(Season, TeamID, OTeamID) %>% 

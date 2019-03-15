@@ -2,7 +2,7 @@
 library(tidyverse)
 library(elo)
 
-reg_stats_compact <- read_csv("data/DataFiles/RegularSeasonCompactResults.csv")
+reg_stats_compact <- read_csv("data/WDataFiles/WRegularSeasonCompactResults.csv")
 
 
 tmp <- reg_stats_compact %>% 

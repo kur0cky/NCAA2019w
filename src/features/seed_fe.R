@@ -3,7 +3,7 @@
 library(tidyverse)
 seed_tmp <- read_csv("data/processed/seed.csv")
 target <- read_csv("data/processed/target.csv")
-sample <- read_csv("data/SampleSubmissionStage1.csv")
+sample <- read_csv("data/WSampleSubmissionStage1.csv")
 
 fe <- target %>% 
   bind_rows(sample) %>% 

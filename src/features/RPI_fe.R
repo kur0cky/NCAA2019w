@@ -2,7 +2,7 @@ library(tidyverse)
 
 RPI <- read_csv("data/processed/RPI.csv")
 target <- read_csv("data/processed/target.csv")
-sample <- read_csv("data/SampleSubmissionStage1.csv")
+sample <- read_csv("data/WSampleSubmissionStage1.csv")
 
 fe <- target %>% 
   bind_rows(sample) %>% 

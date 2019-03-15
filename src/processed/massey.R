@@ -2,8 +2,8 @@
 
 library(tidyverse)
 
-reg_stats_compact <- read_csv("data/DataFiles/RegularSeasonCompactResults.csv")
-teamconf <-read_csv("data/datafiles/TeamConferences.csv")
+reg_stats_compact <- read_csv("data/WDataFiles/WRegularSeasonCompactResults.csv")
+# teamconf <-read_csv("data/Wdatafiles/WTeamConferences.csv")
 target <- read_csv("data/processed/target.csv")
 
 # matrix X

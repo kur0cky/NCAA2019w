@@ -1,6 +1,6 @@
 # ex tourney games
 
-tourney_stats_compact <- read.csv("data/DataFiles/NCAATourneyCompactResults.csv", 
+tourney_stats_compact <- read.csv("data/WDataFiles/WNCAATourneyCompactResults.csv", 
                                   stringsAsFactors = FALSE) %>% 
   as_tibble()
 target <- read_csv("data/processed/target.csv")
@@ -16,7 +16,7 @@ tmp <- tourney_stats_compact %>%
   rename(ex_games = n)
 
 
-sample <- read_csv("data/SampleSubmissionStage1.csv")
+sample <- read_csv("data/WSampleSubmissionStage1.csv")
 
 fe <- target %>% 
   bind_rows(sample) %>% 
