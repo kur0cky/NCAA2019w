@@ -39,10 +39,9 @@ rec = recipe( ~ ., data = tr_df) %>%
   # step_ica(all_numeric(), num_comp = 3) %>% 
   prep()
 
-tr_rec <- bake(rec, tr_df) %>% 
-  select(-PC2)
-te_rec <- bake(rec, te_df) %>% 
-  select(-PC2)
+tr_rec <- bake(rec, tr_df) 
+te_rec <- bake(rec, te_df)
+
 # xgb----
 
 dtrain <- xgb.DMatrix(as.matrix(tr_df),
@@ -118,18 +117,20 @@ xgb.importance(colnames(dtrain), bst)
 
 
 
-fit_glm <- glm(tr_lab ~ . -1,
+fit_glm <- glm(tr_lab ~ . -1 -PC4,
                data = tr_rec,
                family = binomial) 
 library(glmnet)
-cvfit <- cv.glmnet(x = as.matrix(tr_rec), y = tr_lab, family = "binomial", standardize = TRUE,
-                   alpha = 1)
-fit_lasso <- glmnet(x = as.matrix(tr_rec), y = tr_lab, family = "binomial", standardize = TRUE,
+cvfit <- cv.glmnet(x = as.matrix(tr_df), y = tr_lab, family = "binomial", standardize = TRUE,
+                   alpha = 1,
+                   nfolds = 20)
+fit_lasso <- glmnet(x = as.matrix(tr_df), y = tr_lab, family = "binomial", standardize = TRUE,
                     alpha = 1,
                     lambda = cvfit$lambda.min)
-cvfit <- cv.glmnet(x = as.matrix(tr_rec), y = tr_lab, family = "binomial", standardize = TRUE,
-                   alpha = 0)
-fit_ridge <- glmnet(x = as.matrix(tr_rec), y = tr_lab, family = "binomial", standardize = TRUE,
+cvfit <- cv.glmnet(x = as.matrix(tr_df), y = tr_lab, family = "binomial", standardize = TRUE,
+                   alpha = 0,
+                   nfolds = 20)
+fit_ridge <- glmnet(x = as.matrix(tr_df), y = tr_lab, family = "binomial", standardize = TRUE,
                     alpha = 0,
                     lambda = cvfit$lambda.min)
 
@@ -178,49 +179,25 @@ fit_ext <- ranger(tr_lab ~ .,
 submit <- submit %>% 
   mutate(pred_xgb = predict(bst, dtest),
          pred_glm = predict(fit_glm, newdata = te_rec, type = "response"),
-         pred_lasso = predict(fit_lasso, as.matrix(te_rec), type = "response"),
-         pred_ridge = predict(fit_ridge, as.matrix(te_rec), type = "response"),
+         pred_lasso = predict(fit_lasso, as.matrix(te_df), type = "response"),
+         pred_ridge = predict(fit_ridge, as.matrix(te_df), type = "response"),
          pred_rf = predict(fit_rf, te_df)$predictions,
          pred_ext = predict(fit_ext, te_df)$predictions) %>% 
   mutate(pred_rf = if_else(pred_rf < .025, .025, pred_rf),
          pred_rf = if_else(pred_rf > .975, .975, pred_rf),
          pred_ext = if_else(pred_ext < .025, .025, pred_ext),
          pred_ext = if_else(pred_ext > .975, .975, pred_ext)) %>% 
-  mutate(Pred = (pred_glm + pred_lasso + pred_ridge + pred_ext + pred_xgb + pred_rf ) / 6)
+  mutate(Pred = (pred_lasso + pred_ridge + pred_ext + pred_xgb + pred_rf ) / 5)
 
-
-
-submit1 <- submit %>% 
-  mutate(Season = as.integer(str_sub(ID, 1, 4)),
-         team1 = as.integer(str_sub(ID, 6,9)),
-         team2 = as.integer(str_sub(ID, 11,14))) %>% 
-  left_join(seeds, by = c("Season", "team1" = "TeamID")) %>% 
-  left_join(seeds, by = c("Season", "team2" = "TeamID")) %>% 
-  rename(Seed1 = Seed.x, Seed2 = Seed.y) %>% 
-  mutate(Seed1 = as.integer(str_sub(Seed1, 2,3)),
-         Seed2 = as.integer(str_sub(Seed2, 2,3)))
   
 
-submit1$Pred[submit1$Seed1 == 16 & submit1$Seed2 == 1] = 0.001
-# submit1$Pred[submit1$Seed1 == 15 & submit1$Seed2 == 2] = 0.001
-# submit1$Pred[submit1$Seed1 == 14 & submit1$Seed2 == 3] = 0.001
-# submit1$Pred[submit1$Seed1 == 13 & submit1$Seed2 == 4] = 0.001
-submit1$Pred[submit1$Seed1 == 1 & submit1$Seed2 == 16] = 0.999
-# submit1$Pred[submit1$Seed1 == 2 & submit1$Seed2 == 15] = 0.999
-# submit1$Pred[submit1$Seed1 == 3 & submit1$Seed2 == 14] = 0.999
-# submit1$Pred[submit1$Seed1 == 4 & submit1$Seed2 == 13] = 0.999
-submit1 <- submit1 %>% 
-  select(-Seed1, -Seed2, -Season, -team1, -team2)
-validate(submit1)
 validate(submit)
-
-validate_y(submit1)
 validate_y(submit)
 sub <- submit %>% 
   select(ID, Pred) %>% 
   arrange(ID)
-# sub %>% 
-#   write_csv("data/submit/first.csv")
+sub %>%
+  write_csv("data/submit/first.csv")
 # 
 # submit %>% 
 #   inner_join(target) %>% 
@@ -232,15 +209,36 @@ sub <- submit %>%
 
 # boruta----
 
-# library(Boruta)
-# set.seed(111)
-# res_boruta <- Boruta(tr_lab ~ . -1,
-#                      data = tr_rec,
-#                      doTrace = 2, 
-#                      maxRuns = 500)
-# print(res_boruta)
-# plot(res_boruta)
-# attStats(res_boruta) %>% 
-#   rownames_to_column("feature") %>% 
-#   arrange(desc(meanImp))
-# plotImpHistory(res_boruta)
+library(Boruta)
+set.seed(111)
+res_boruta <- Boruta(tr_lab ~ . -1,
+                     data = tr_df,
+                     doTrace = 2,
+                     maxRuns = 500)
+print(res_boruta)
+plot(res_boruta)
+attStats(res_boruta) %>%
+  rownames_to_column("feature") %>%
+  arrange(desc(meanImp))
+plotImpHistory(res_boruta)
+
+
+sub <- submit %>% 
+  mutate(Season = as.integer(str_sub(ID, 1, 4)),
+         team1 = as.integer(str_sub(ID, 6, 9)),
+         team2 = as.integer(str_sub(ID, 11, 14))) %>% 
+  left_join(tourney_seeds, by = c("Season", "team1" = "TeamID")) %>% 
+  left_join(tourney_seeds, by = c("Season", "team2" = "TeamID")) %>% 
+  transmute(ID, Pred, 
+            Seed1 = as.integer(str_sub(Seed.x, 2, 3)), 
+            Seed2 = as.integer(str_sub(Seed.y, 2, 3)))
+
+sub$Pred[sub$Seed1 == 16 & sub$Seed2 == 1] = 0.0001
+sub$Pred[sub$Seed1 == 15 & sub$Seed2 == 2] = 0.0001
+sub$Pred[sub$Seed1 == 14 & sub$Seed2 == 3] = 0.0001
+sub$Pred[sub$Seed1 == 13 & sub$Seed2 == 4] = 0.0001
+sub$Pred[sub$Seed1 == 1 & sub$Seed2 == 16] = 0.9999
+sub$Pred[sub$Seed1 == 2 & sub$Seed2 == 15] = 0.9999
+sub$Pred[sub$Seed1 == 3 & sub$Seed2 == 14] = 0.9999
+sub$Pred[sub$Seed1 == 4 & sub$Seed2 == 13] = 0.9999
+
