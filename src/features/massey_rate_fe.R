@@ -1,6 +1,6 @@
 library(tidyverse)
 
-tmp <- read_csv("data/processed/elo.csv")
+tmp <- read_csv("data/processed/massey_rate.csv")
 target <- read_csv("data/processed/target.csv")
 sample <- read_csv("data/WSampleSubmissionStage1.csv")
 
@@ -14,10 +14,12 @@ fe <- target %>%
   left_join(tmp, by = c("Season", "team2" = "TeamID")) %>% 
   select(-Season, -team1, -team2) %>% 
   transmute(ID,
-            elo_r_diff = elo_r.x - elo_r.y,
-            elo_2r_diff = elo_2r.x - elo_2r.y,
-            elo_3r_diff = elo_3r.x - elo_3r.y,
-            elo_all_diff = elo_all.x - elo_all.y)
+            massey_rate_diff = massey_r.x - massey_r.y,
+            # massey_r.x,
+            # massey_r.y
+            # massey_o_diff = massey_o.x - massey_o.y,
+            # massey_d_diff = massey_d.x - massey_d.y,
+  )
 
-write_csv(fe, "data/features/elo_fe.csv")
+write_csv(fe, "data/features/massey_rate_fe.csv")
 rm(tmp, fe);gc()

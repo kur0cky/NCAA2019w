@@ -15,8 +15,8 @@ fe <- target %>%
   select(-Season, -team1, -team2) %>% 
   transmute(ID,
             massey_r_diff = massey_r.x - massey_r.y,
-            massey_r.x,
-            massey_r.y
+            # massey_r.x,
+            # massey_r.y
             # massey_o_diff = massey_o.x - massey_o.y,
             # massey_d_diff = massey_d.x - massey_d.y,
             )

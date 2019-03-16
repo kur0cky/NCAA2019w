@@ -3,12 +3,12 @@
 
 library(tidyverse)
 
-list.files("src/processed",
-           full.names = T) %>% 
-  map(source)
-list.files("src/features",
-           full.names = T) %>% 
-  map(source)
+# list.files("src/processed",
+#            full.names = T) %>% 
+#   map(source)
+# list.files("src/features",
+#            full.names = T) %>% 
+#   map(source)
 
 
 basis_nmf_fe <- read.csv("data/features/basis_nmf_fe.csv", stringsAsFactors = FALSE)
@@ -19,6 +19,8 @@ elo_score_fe <- read.csv("data/features/elo_score_fe.csv", stringsAsFactors = FA
 keener_scorerate_fe <- read.csv("data/features/keener_scorerate_fe.csv", stringsAsFactors = FALSE)
 keener_scorediff_fe <- read.csv("data/features/keener_scorediff_fe.csv", stringsAsFactors = FALSE)
 massey_fe <- read.csv("data/features/massey_fe.csv", stringsAsFactors = FALSE)
+massey_rate_fe <- read.csv("data/features/massey_rate_fe.csv", stringsAsFactors = FALSE)
+massey_3yr_fe <- read.csv("data/features/massey_3yr_fe.csv", stringsAsFactors = FALSE)
 markov_win_diff <- read.csv("data/features/markov_win_diff.csv", stringsAsFactors = FALSE)
 nmf_fe <- read.csv("data/features/nmf_fe.csv", stringsAsFactors = FALSE)
 od_fe <- read.csv("data/features/od_fe.csv", stringsAsFactors = FALSE)
@@ -39,6 +41,8 @@ target %>%
   left_join(keener_scorerate_fe, by = "ID") %>%
   left_join(keener_scorediff_fe, by = "ID") %>%
   left_join(massey_fe, by = "ID") %>%
+  left_join(massey_rate_fe, by = "ID") %>%
+  left_join(massey_3yr_fe, by = "ID") %>%
   left_join(markov_win_diff, by = "ID") %>%
   left_join(nmf_fe, by = "ID") %>%
   left_join(od_fe, by = "ID") %>%

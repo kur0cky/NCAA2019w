@@ -65,6 +65,28 @@ tmp4 <- reg_stats_compact %>%
   unnest(elo3) %>% 
   gather(TeamID, elo_3r, -Season) %>% 
   drop_na()
+tmp5 <- reg_stats_compact %>% 
+  select(Season, DayNum, WTeamID, LTeamID) %>% 
+  arrange(Season, DayNum, WTeamID, LTeamID) %>% 
+  mutate(win_flg = TRUE,
+         WTeamID = as.character(WTeamID),
+         LTeamID = as.character(LTeamID)) %>% 
+  group_by(Season) %>% 
+  nest() %>% 
+  mutate(lag = lag(data, 1),
+         data = map2(data, lag, ~ rbind(.y, .x))) %>% 
+  select(-lag) %>% 
+  mutate(elo2 = map(data, ~ 
+                      elo.run(win_flg ~ WTeamID + LTeamID,
+                              data = .x,
+                              k = 20) %>% 
+                      as.matrix() %>% 
+                      as_tibble() %>% 
+                      tail(1))) %>% 
+  select(Season, elo2) %>% 
+  unnest(elo2) %>% 
+  gather(TeamID, elo_2r, -Season) %>% 
+  drop_na()
 
 tmp %>% 
   select(Season, elo) %>% 
@@ -73,7 +95,8 @@ tmp %>%
   drop_na() %>% 
   left_join(tmp3, by = c("Season", "TeamID")) %>% 
   left_join(tmp4, by = c("Season", "TeamID")) %>% 
+  left_join(tmp5, by = c("Season", "TeamID")) %>% 
   write_csv("data/processed/elo.csv")
 
-rm(tmp, tmp2, tmp3);gc()
+rm(tmp, tmp2, tmp3, tmp4, tmp5);gc()
 
