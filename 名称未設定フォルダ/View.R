@@ -13,6 +13,6 @@ sub2 %>%
   left_join(seeds, by = c("Season", "team1" = "TeamID")) %>% 
   left_join(seeds, by = c("Season", "team2" = "TeamID")) %>% 
   # filter(seed.y %in% c(1:4,13:16), seed.x %in% c(1:4,13:16)) %>% 
-  filter(seed.x + seed.y == 17) %>% 
+  # filter(seed.x + seed.y == 17) %>% 
   select(-ID) %>% 
   View()
